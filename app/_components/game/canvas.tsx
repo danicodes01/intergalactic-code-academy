@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { GameState, GameColors, GameArea } from '../../types/game';
 import { Station } from '../../types/stations';
 import { getGameStations } from '../../_data/stations';
-import { drawMoon, drawSaturn, drawVenus } from './utils/drawStations'; 
+import { drawMoon, drawSaturn, drawVenus } from './utils/drawStations';
 
 // constants
 const COLORS: GameColors = {
@@ -30,6 +30,8 @@ export default function GameCanvas({
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [hoveredStation, setHoveredStation] = useState<Station | null>(null);
   const [stations, setStations] = useState<Station[]>([]);
+  const [showIntro, setShowIntro] = useState(true);
+  const [fadeOut, setFadeOut] = useState(false);
 
   // Initialize game state using the GameState interface
   const [gameState, setGameState] = useState<GameState>({
@@ -38,6 +40,22 @@ export default function GameCanvas({
     activeChallenge: null,
     isPaused: false,
   });
+
+  // Intro sequence effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFadeOut(true);
+    }, 10000);
+
+    const hideTimer = setTimeout(() => {
+      setShowIntro(false);
+    }, 12000);
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(hideTimer);
+    };
+  }, []);
 
   // Update stations when dimensions change
   useEffect(() => {
@@ -103,6 +121,30 @@ export default function GameCanvas({
     }));
   };
 
+  const drawStationLabel = (
+    ctx: CanvasRenderingContext2D, 
+    station: Station,
+    isHovered: boolean
+  ): void => {
+    const { x, y, radius } = station.position;
+    
+    ctx.save();
+    // Set the font to Press Start 2P
+    ctx.font = `${isHovered ? '16px' : '14px'} 'Press Start 2P'`;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = isHovered ? COLORS.accent : COLORS.foreground;
+
+    // Draw the station name
+    ctx.fillText(station.name, x, y - radius - 20);
+
+    // Draw description if hovered
+    if (isHovered) {
+      ctx.font = '12px Press Start 2P';
+      ctx.fillText(station.description, x, y - radius - 40);
+    }
+    ctx.restore();
+  };
+
   // Setup canvas and game loop
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -118,10 +160,10 @@ export default function GameCanvas({
       let newX = gameState.playerPosition.x;
       let newY = gameState.playerPosition.y;
 
-      if (keys.has('ArrowLeft')) newX -= SHIP_SPEED;
-      if (keys.has('ArrowRight')) newX += SHIP_SPEED;
-      if (keys.has('ArrowUp')) newY -= SHIP_SPEED;
-      if (keys.has('ArrowDown')) newY += SHIP_SPEED;
+      if (keys.has('a')) newX -= SHIP_SPEED;
+      if (keys.has('d')) newX += SHIP_SPEED;
+      if (keys.has('w')) newY -= SHIP_SPEED;
+      if (keys.has('s')) newY += SHIP_SPEED;
 
       // Keep ship within canvas bounds
       newX = Math.max(20, Math.min(dimensions.width - 20, newX));
@@ -181,45 +223,24 @@ export default function GameCanvas({
     };
 
     const drawStation = (ctx: CanvasRenderingContext2D, station: Station): void => {
-        const { x, y, radius } = station.position;
-        const isHovered = hoveredStation?.id === station.id;
+      const { x, y, radius } = station.position;
+      const isHovered = hoveredStation?.id === station.id;
       
-        switch (station.id) {
-          case 'mission-control':
-            drawMoon(
-              ctx,
-              x,
-              y,
-              radius,
-              station.isUnlocked,
-              isHovered,
-              COLORS.accent
-            );
-            break;
-          case 'frontend-corps':
-            drawVenus(
-              ctx,
-              x,
-              y,
-              radius,
-              station.isUnlocked,
-              isHovered,
-              COLORS.accent
-            );
-            break;
-          case 'systems-division':
-            drawSaturn(
-              ctx,
-              x,
-              y,
-              radius,
-              station.isUnlocked,
-              isHovered,
-              COLORS.accent
-            );
-            break;
-        }
-      };
+      switch (station.id) {
+        case 'mission-control':
+          drawMoon(ctx, x, y, radius, station.isUnlocked, isHovered, COLORS.accent);
+          break;
+        case 'frontend-corps':
+          drawVenus(ctx, x, y, radius, station.isUnlocked, isHovered, COLORS.accent);
+          break;
+        case 'systems-division':
+          drawSaturn(ctx, x, y, radius, station.isUnlocked, isHovered, COLORS.accent);
+          break;
+      }
+
+      // Draw the label after drawing the station
+      drawStationLabel(ctx, station, isHovered);
+    };
 
     const renderGame = (): void => {
       // Clear canvas with background
@@ -294,8 +315,41 @@ export default function GameCanvas({
   }, [keys, gameState.playerPosition, gameState.isPaused, dimensions, hoveredStation, stations]);
 
   return (
-    <div ref={containerRef} className='fixed inset-0 bg-[#1C1C1EFF]'>
-      <canvas ref={canvasRef} className='block' />
+    <div ref={containerRef} className="fixed inset-0 bg-[#1C1C1EFF]">
+      {showIntro && (
+        <div 
+          className={`fixed inset-0 flex items-center justify-center perspective-800 ${
+            fadeOut ? 'opacity-0' : 'opacity-100'
+          } transition-opacity duration-30000 z-50`}
+        >
+          <div className="relative w-full max-w-2xl transform -rotate-x-60 text-center text-yellow-400 animate-scroll">
+            <div className="font-[Press_Start_2P] space-y-8 text-center px-8">
+              <h1 className="text-2xl mb-8">INTERGALACTIC CODE ACADEMY</h1>
+              <p className="text-sm leading-relaxed">
+                In a digital galaxy far, far away... aspiring developers embark on an 
+                epic journey through the cosmos of code.
+              </p>
+              <p className="text-sm leading-relaxed">
+                Your mission, should you choose to accept it, is to navigate 
+                through our celestial learning stations, conquering challenges 
+                and expanding your programming prowess.
+              </p>
+              <p className="text-sm leading-relaxed">
+                May the code be with you...
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Game Title */}
+      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 pointer-events-none">
+        <h1 className="font-[Press_Start_2P] text-[color:var(--game-text)] text-xl text-center">
+          INTERGALACTIC CODE ACADEMY
+        </h1>
+      </div>
+
+      <canvas ref={canvasRef} className="block" />
     </div>
   );
 }

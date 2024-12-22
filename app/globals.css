@@ -2,12 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 :root {
   --foreground: #3C3C4399;
   --background: #F2F2F7FF;
   --gradient-nav: linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgba(30, 30, 30, 0.9) 50%, rgba(0, 0, 0, 1) 100%);
   --link: #5AC8FAFF;
   --blur-rgb: 0, 0, 0;
+  --game-text: #5AC8FAFF;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,6 +20,7 @@
     --gradient-nav: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(245, 245, 245, 0.9) 50%, rgba(255, 255, 255, 1) 100%);
     --link: #64D2FFFF;
     --blur-rgb: 255, 255, 255;
+    --game-text: #64D2FFFF;
   }
 }
 
@@ -36,13 +40,13 @@ body {
       var(--background)
     )
     var(--background);
-    margin: 0;
-
-    --muted-text-rgb: 176, 176, 176;
-    --highlight-gradient: linear-gradient(to right, #E61E4D 0%, #E31C5F 50%, #D70466 100%);
-    --violet-rgb: 160, 122, 170;
+  margin: 0;
+  --muted-text-rgb: 176, 176, 176;
+  --highlight-gradient: linear-gradient(to right, #E61E4D 0%, #E31C5F 50%, #D70466 100%);
+  --violet-rgb: 160, 122, 170;
 }
 
+/* Your existing styles */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -83,4 +87,54 @@ a {
 .error p {
   font-size: 1.5rem;
   font-weight: 500;
+}
+
+/* Game specific styles */
+@keyframes scroll {
+  0% {
+    transform: translateY(100vh) rotateX(20deg);
+  }
+  100% {
+    transform: translateY(-200vh) rotateX(20deg);
+  }
+}
+
+.perspective-800 {
+  perspective: 800px;
+}
+
+.rotate-x-60 {
+  transform: rotateX(60deg);
+}
+
+.animate-scroll {
+  animation: scroll 20s linear;
+}
+
+.duration-2000 {
+  transition-duration: 2000ms;
+}
+
+/* Game text styles */
+.station-label {
+  font-family: 'Press Start 2P', monospace;
+  color: var(--game-text);
+  text-align: center;
+}
+
+.station-title {
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.station-subtitle {
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
+.game-title {
+  font-family: 'Press Start 2P', monospace;
+  color: var(--game-text);
+  font-size: 1.25rem;
+  text-align: center;
 }
