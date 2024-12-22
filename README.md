@@ -34,3 +34,37 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+# Intergalactic Code Academy - Core Concept
+An educational game platform that teaches coding through space exploration:
+
+## Core Features
+* Canvas-based navigation between learning areas
+* Custom-drawn celestial bodies representing different learning paths
+* Real-world coding challenges in a space theme
+* Responsive, fullscreen game environment
+
+## Learning Paths
+1. Frontend Engineering Corps (Venus Station)
+   * UI/UX challenges
+   * React & State Management
+   * Performance optimization
+
+2. Systems Engineering Division (Saturn Station)
+   * Algorithms & Data Structures
+   * System Design
+   * Backend Development
+
+3. Mission Control (Moon Base)
+   * Central Hub
+   * Progress Tracking
+   * Path Selection
+
+## Technical Stack
+* Next.js 15.1.2 (App Router)
+* TypeScript
+* MongoDB for database
+* NextAuth for authentication
+* Canvas for game interface
+* Tailwind CSS
