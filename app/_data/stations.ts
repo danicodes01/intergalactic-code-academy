@@ -19,7 +19,7 @@ export const getGameStations = (width: number, height: number): Station[] => [
     name: 'Frontend Engineering Corps',
     area: GameArea.FRONTEND_CORPS,
     position: getRelativePosition(width, height, 0.25, 0.3),
-    icon: '🚀',
+    icon: '🛸',
     description: 'Master frontend engineering with challenges in UI/UX, state management, and optimization.',
     learningPath: {
       title: 'Frontend Development Path',
