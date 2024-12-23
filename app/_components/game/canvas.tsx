@@ -43,19 +43,25 @@ export default function GameCanvas({
 
   // Intro sequence effect
   useEffect(() => {
+    const crawlContainer = document.querySelector('.starwars-crawl') as HTMLElement;
+    if (crawlContainer) {
+      crawlContainer.style.animationDuration = '10s'; // Slower scroll speed
+    }
+  
     const timer = setTimeout(() => {
       setFadeOut(true);
-    }, 10000);
-
+    }, 6000); // Extend delay for fade out
+  
     const hideTimer = setTimeout(() => {
       setShowIntro(false);
-    }, 12000);
-
+    }, 6000); // Match fade-out timing
+  
     return () => {
       clearTimeout(timer);
       clearTimeout(hideTimer);
     };
   }, []);
+  
 
   // Update stations when dimensions change
   useEffect(() => {
@@ -122,12 +128,12 @@ export default function GameCanvas({
   };
 
   const drawStationLabel = (
-    ctx: CanvasRenderingContext2D, 
+    ctx: CanvasRenderingContext2D,
     station: Station,
-    isHovered: boolean
+    isHovered: boolean,
   ): void => {
     const { x, y, radius } = station.position;
-    
+
     ctx.save();
     // Set the font to Press Start 2P
     ctx.font = `${isHovered ? '16px' : '14px'} 'Press Start 2P'`;
@@ -222,19 +228,46 @@ export default function GameCanvas({
       }
     };
 
-    const drawStation = (ctx: CanvasRenderingContext2D, station: Station): void => {
+    const drawStation = (
+      ctx: CanvasRenderingContext2D,
+      station: Station,
+    ): void => {
       const { x, y, radius } = station.position;
       const isHovered = hoveredStation?.id === station.id;
-      
+
       switch (station.id) {
         case 'mission-control':
-          drawMoon(ctx, x, y, radius, station.isUnlocked, isHovered, COLORS.accent);
+          drawMoon(
+            ctx,
+            x,
+            y,
+            radius,
+            station.isUnlocked,
+            isHovered,
+            COLORS.accent,
+          );
           break;
         case 'frontend-corps':
-          drawVenus(ctx, x, y, radius, station.isUnlocked, isHovered, COLORS.accent);
+          drawVenus(
+            ctx,
+            x,
+            y,
+            radius,
+            station.isUnlocked,
+            isHovered,
+            COLORS.accent,
+          );
           break;
         case 'systems-division':
-          drawSaturn(ctx, x, y, radius, station.isUnlocked, isHovered, COLORS.accent);
+          drawSaturn(
+            ctx,
+            x,
+            y,
+            radius,
+            station.isUnlocked,
+            isHovered,
+            COLORS.accent,
+          );
           break;
       }
 
@@ -312,44 +345,52 @@ export default function GameCanvas({
     return () => {
       window.clearInterval(loop);
     };
-  }, [keys, gameState.playerPosition, gameState.isPaused, dimensions, hoveredStation, stations]);
+  }, [
+    keys,
+    gameState.playerPosition,
+    gameState.isPaused,
+    dimensions,
+    hoveredStation,
+    stations,
+  ]);
 
   return (
-    <div ref={containerRef} className="fixed inset-0 bg-[#1C1C1EFF]">
+    <div ref={containerRef} className='fixed inset-0 bg-[#1C1C1EFF]'>
       {showIntro && (
-        <div 
-          className={`fixed inset-0 flex items-center justify-center perspective-800 ${
+        <div
+          className={`fixed inset-0 flex items-center justify-center z-50 transition-opacity duration-1000 ${
             fadeOut ? 'opacity-0' : 'opacity-100'
-          } transition-opacity duration-30000 z-50`}
+          }`}
         >
-          <div className="relative w-full max-w-2xl transform -rotate-x-60 text-center text-yellow-400 animate-scroll">
-            <div className="font-[Press_Start_2P] space-y-8 text-center px-8">
-              <h1 className="text-2xl mb-8">INTERGALACTIC CODE ACADEMY</h1>
-              <p className="text-sm leading-relaxed">
-                In a digital galaxy far, far away... aspiring developers embark on an 
-                epic journey through the cosmos of code.
-              </p>
-              <p className="text-sm leading-relaxed">
-                Your mission, should you choose to accept it, is to navigate 
-                through our celestial learning stations, conquering challenges 
-                and expanding your programming prowess.
-              </p>
-              <p className="text-sm leading-relaxed">
-                May the code be with you...
-              </p>
+          <div className='starwars-container'>
+            <div className='starwars-crawl'>
+              <div className='starwars-title'>INTERGALACTIC CODE ACADEMY</div>
+              <div className='starwars-content'>
+                <p>In a digital galaxy far, far away...</p>
+                <p>
+                  Aspiring developers embark on an epic journey through the
+                  cosmos of code.
+                </p>
+                <p>
+                  Your mission, should you choose to accept it, is to navigate
+                  through our celestial learning stations, conquering challenges
+                  and expanding your programming prowess.
+                </p>
+                <p>May the code be with you...</p>
+              </div>
             </div>
           </div>
         </div>
       )}
-      
+
       {/* Game Title */}
-      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 pointer-events-none">
-        <h1 className="font-[Press_Start_2P] text-[color:var(--game-text)] text-xl text-center">
+      <div className='fixed top-4 left-1/2 transform -translate-x-1/2 pointer-events-none'>
+        <h1 className='font-[Press_Start_2P] text-[color:var(--game-text)] text-xl text-center'>
           INTERGALACTIC CODE ACADEMY
         </h1>
       </div>
 
-      <canvas ref={canvasRef} className="block" />
+      <canvas ref={canvasRef} className='block' />
     </div>
   );
 }

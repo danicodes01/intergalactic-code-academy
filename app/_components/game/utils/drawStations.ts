@@ -77,7 +77,7 @@ export const drawMoon = (
       ctx.shadowBlur = 20;
     }
   
-    // Draw planet body
+    // body
     ctx.beginPath();
     ctx.arc(x, y, radius * 0.8, 0, Math.PI * 2);
     const planetGradient = ctx.createLinearGradient(
@@ -86,12 +86,12 @@ export const drawMoon = (
       x + radius, 
       y + radius
     );
-    planetGradient.addColorStop(0, '#DAA520');  // Golden
-    planetGradient.addColorStop(1, '#CD853F');  // Sandy brown
+    planetGradient.addColorStop(0, '#DAA520');  
+    planetGradient.addColorStop(1, '#CD853F');  
     ctx.fillStyle = planetGradient;
     ctx.fill();
   
-    // Draw rings
+    // rings
     ctx.beginPath();
     ctx.ellipse(x, y, radius * 1.5, radius * 0.3, Math.PI / 8, 0, Math.PI * 2);
     const ringGradient = ctx.createLinearGradient(
