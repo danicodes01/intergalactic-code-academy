@@ -138,3 +138,54 @@ a {
   font-size: 1.25rem;
   text-align: center;
 }
+
+@keyframes starwars-crawl {
+  0% {
+    transform: translateY(100vh) scale(1) rotateX(20deg);
+  }
+  100% {
+    transform: translateY(-200vh) scale(0.5) rotateX(20deg);
+  }
+}
+
+.starwars-container {
+  position: absolute;
+  bottom: 0; /* Start from the very bottom */
+  width: 100%;
+  overflow: hidden;
+  perspective: 400px;
+}
+
+.starwars-crawl {
+  font-family: 'Press Start 2P', sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: var(--game-text);
+  transform: rotateX(25deg) translateZ(0);
+  transform-origin: bottom center;
+  animation: crawl 60s linear;
+  text-align: center; /* Ensure text is centered */
+  width: 80%; /* Optionally reduce the width */
+  margin: 0 auto; /* Center it horizontally */
+}
+
+
+.starwars-title {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.starwars-content {
+  text-align: justify;
+}
+
+@keyframes crawl {
+  0% {
+    transform: rotateX(25deg) translateY(100%); /* Start below the screen */
+  }
+  100% {
+    transform: rotateX(25deg) translateY(-100%); /* End at the top of the screen */
+  }
+}
+
